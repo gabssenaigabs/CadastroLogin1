@@ -1,0 +1,110 @@
+@using GestaoCondominio.Models
+@model Condomino
+@{
+    ViewData["Title"] = "Cadastrar Condômino";
+}
+
+<div class="auth-page d-flex align-items-center justify-content-center">
+    <div class="auth-container auth-container-lg">
+        <div class="auth-card text-center">
+            <div class="mb-3">
+                <div class="logo-icon mx-auto">GC</div>
+                <h4 class="app-title mt-2">Cadastrar Condômino</h4>
+                <p class="app-subtitle small">Adicione um condômino e, se houver, vincule-o a um imóvel.</p>
+            </div>
+
+            <form id="condomino-create-form" asp-action="Create" method="post" class="mt-3 text-start">
+                @Html.AntiForgeryToken()
+                <div id="condomino-validation-summary" asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
+
+                <div class="mb-3">
+                    <label class="form-label">Nome</label>
+                    <input asp-for="Nome" class="form-control" placeholder="Nome completo" />
+                    <span asp-validation-for="Nome" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">E-mail</label>
+                    <input asp-for="Email" class="form-control" placeholder="email@exemplo.com" />
+                </div>
+
+                <div class="row g-2 mb-3">
+                    <div class="col-6">
+                        <label class="form-label">CPF</label>
+                        <input asp-for="CPF" class="form-control" placeholder="000.000.000-00" />
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label">Telefone</label>
+                        <input asp-for="Telefone" class="form-control" placeholder="(99) 99999-9999" />
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Imóvel (opcional)</label>
+                    <select asp-for="ImovelId" class="form-select" asp-items="ViewBag.Imoveis">
+                        <option value="">-- Nenhum --</option>
+                    </select>
+                    @{
+                        var imoveisList = ViewBag.Imoveis as IEnumerable<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem> ?? Enumerable.Empty<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>();
+                        if (!imoveisList.Any())
+                        {
+                            <div class="form-text text-muted">Nenhum imóvel cadastrado. Cadastre um imóvel primeiro se quiser vincular.</div>
+                        }
+                    }
+                </div>
+
+                <button id="condomino-submit" class="btn btn-primary w-100 btn-lg" type="submit">Salvar</button>
+                <a asp-controller="Management" asp-action="Index" class="btn btn-outline-secondary w-100 mt-2">Cancelar</a>
+            </form>
+            <hr class="my-4" />
+
+            <h5 class="mb-3">Condôminos cadastrados</h5>
+            <div id="condominos-list-container">
+                <partial name="_List" model="Enumerable.Empty<GestaoCondominio.Models.Condomino>()" />
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(function(){
+            function loadList(){
+                $.get('@Url.Action("ListPartial","Condominos")', function(html){
+                    $('#condominos-list-container').html(html);
+                });
+            }
+            loadList();
+
+            $('#condomino-create-form').on('submit', function(e){
+                e.preventDefault();
+                var $form = $(this);
+                var data = $form.serialize();
+                $.ajax({
+                    url: $form.attr('action'),
+                    method: 'POST',
+                    data: data,
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                    success: function(resp){
+                        console.log('AJAX create condomino response:', resp);
+                        if(resp && resp.success){
+                            $form[0].reset();
+                            $('#condomino-validation-summary').empty();
+                            loadList();
+                        } else if(resp && resp.errors){
+                            var html = '<ul>' + resp.errors.map(function(e){ return '<li>'+e+'</li>'; }).join('') + '</ul>';
+                            $('#condomino-validation-summary').html(html);
+                        } else {
+                            location.href = '@Url.Action("Index","Condominos")';
+                        }
+                    },
+                    error: function(xhr){
+                        console.error('AJAX error:', xhr);
+                        alert('Erro ao criar condômino.');
+                    }
+                });
+            });
+        });
+    </script>
+}

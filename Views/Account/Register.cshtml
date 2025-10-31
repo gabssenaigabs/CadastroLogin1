@@ -1,0 +1,54 @@
+@{
+    ViewData["Title"] = "Criar Conta";
+}
+
+<div class="auth-page d-flex align-items-center justify-content-center">
+    <div class="auth-container text-center">
+        <div class="logo-wrap mb-3">
+            <div class="logo-icon">🏢</div>
+        </div>
+        <h1 class="app-title">CondoHub</h1>
+        <p class="app-subtitle">Gestão inteligente e conectada</p>
+
+        <div class="auth-card mx-auto mt-4 text-start">
+            <h5 class="card-title">Criar Conta</h5>
+            <p class="text-muted small">Selecione o tipo de acesso</p>
+
+            <div class="row g-3 mt-2">
+                <div class="col-12">
+                    <a asp-controller="Account" asp-action="RegisterMorador" class="card select-card d-flex align-items-center p-3">
+                        <div class="me-3 icon-circle bg-success text-white">👤</div>
+                        <div>
+                            <div class="fw-bold">Morador</div>
+                            <div class="text-muted small">Acesso a avisos, pagamentos e solicitações</div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-12">
+                    <a asp-controller="Account" asp-action="RegisterSindico" class="card select-card d-flex align-items-center p-3">
+                        <div class="me-3 icon-circle bg-primary text-white">🏙️</div>
+                        <div>
+                            <div class="fw-bold">Síndico</div>
+                            <div class="text-muted small">Gerenciar avisos, manutenções e relatórios</div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-12">
+                    <a asp-controller="Account" asp-action="RegisterGestor" class="card select-card d-flex align-items-center p-3">
+                        <div class="me-3 icon-circle bg-purple text-white">🏢</div>
+                        <div>
+                            <div class="fw-bold">Gestor</div>
+                            <div class="text-muted small">Acesso completo ao sistema</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="mt-3 text-center small">Já tem uma conta? <a asp-controller="Account" asp-action="Login">Fazer login</a></div>
+        </div>
+
+        <div class="mt-4 text-muted small">© 2025 CondoHub. Todos os direitos reservados.</div>
+    </div>
+</div>

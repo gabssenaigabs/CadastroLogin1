@@ -1,0 +1,42 @@
+@using GestaoCondominio.Models
+@model Funcionario
+@{
+    ViewData["Title"] = "Cadastrar Funcionário";
+}
+
+<div class="auth-page d-flex align-items-center justify-content-center">
+    <div class="auth-container auth-container-lg">
+        <div class="auth-card">
+            <h5 class="card-title">Cadastrar Funcionário</h5>
+            <form asp-action="Create" method="post" class="mt-3">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="mb-3">
+                    <label class="form-label">Nome</label>
+                    <input asp-for="Nome" class="form-control" />
+                    <span asp-validation-for="Nome" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Cargo</label>
+                    <input asp-for="Cargo" class="form-control" />
+                </div>
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <label class="form-label">Telefone</label>
+                        <input asp-for="Telefone" class="form-control" />
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label">E-mail</label>
+                        <input asp-for="Email" class="form-control" />
+                    </div>
+                </div>
+                <button class="btn btn-primary">Salvar</button>
+                <a asp-controller="Management" asp-action="Index" class="btn btn-link ms-2">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,26 @@
+@model IEnumerable<GestaoCondominio.Models.Imovel>
+@{
+    ViewData["Title"] = "Imóveis";
+}
+
+<div class="container mt-4">
+    <h3>Imóveis</h3>
+    <div class="row g-3 mt-3">
+        @foreach(var im in Model)
+        {
+            <div class="col-md-6">
+                <div class="management-card p-3">
+                    <h5 class="mb-1">@im.Endereco</h5>
+                    <p class="text-muted mb-1">Bloco: @im.Bloco • Unidade: @im.Unidade</p>
+                    <p class="small text-muted">@im.Observacoes</p>
+                </div>
+            </div>
+        }
+        @if(!Model.Any())
+        {
+            <div class="col-12">
+                <div class="alert alert-info">Nenhum imóvel cadastrado.</div>
+            </div>
+        }
+    </div>
+</div>

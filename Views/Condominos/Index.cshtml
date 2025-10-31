@@ -1,0 +1,18 @@
+@model IEnumerable<GestaoCondominio.Models.Condomino>
+@{
+    ViewData["Title"] = "Condôminos";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>Condôminos</h3>
+        @if (User.IsInRole("Gestor"))
+        {
+            <a class="btn btn-primary" asp-controller="Condominos" asp-action="Create">Cadastrar Condômino</a>
+        }
+    </div>
+
+    <div id="condominos-list-container">
+        <partial name="_List" model="Model" />
+    </div>
+</div>

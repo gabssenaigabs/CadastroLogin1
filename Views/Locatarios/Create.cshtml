@@ -1,0 +1,133 @@
+@using GestaoCondominio.Models
+@model Locatario
+@{
+    ViewData["Title"] = "Cadastrar Locatário";
+}
+
+<div class="auth-page d-flex align-items-center justify-content-center">
+    <div class="auth-container auth-container-lg">
+        <div class="auth-card text-center">
+            <div class="mb-3">
+                <div class="logo-icon mx-auto">GC</div>
+                <h4 class="app-title mt-2">Cadastrar Locatário</h4>
+                <p class="app-subtitle small">Adicione um locatário e vincule ao imóvel alugado quando aplicável.</p>
+            </div>
+
+            <form id="locatario-create-form" asp-action="Create" method="post" class="mt-3 text-start">
+                @Html.AntiForgeryToken()
+                <div id="locatario-validation-summary" asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
+
+                <div class="mb-3">
+                    <label class="form-label">Nome</label>
+                    <input asp-for="Nome" class="form-control" placeholder="Nome completo" />
+                    <span asp-validation-for="Nome" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">E-mail (opcional)</label>
+                    <input asp-for="Email" class="form-control" placeholder="seu@email.com" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="row g-2 mb-3">
+                    <div class="col-6">
+                        <label class="form-label">CPF</label>
+                        <input asp-for="CPF" class="form-control" placeholder="000.000.000-00" />
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label">Telefone</label>
+                        <input asp-for="Telefone" class="form-control" placeholder="(99) 99999-9999" />
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Imóvel (opcional)</label>
+                    <select asp-for="ImovelId" class="form-select" asp-items="ViewBag.Imoveis">
+                        <option value="">-- Nenhum --</option>
+                    </select>
+                    @{
+                        var imoveisList = ViewBag.Imoveis as IEnumerable<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem> ?? Enumerable.Empty<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>();
+                        if (!imoveisList.Any())
+                        {
+                            <div class="form-text text-muted">Nenhum imóvel cadastrado. Cadastre um imóvel primeiro se quiser vincular.</div>
+                        }
+                    }
+                </div>
+
+                <button id="locatario-submit" class="btn btn-primary w-100 btn-lg" type="submit">Salvar</button>
+                <a asp-controller="Management" asp-action="Index" class="btn btn-outline-secondary w-100 mt-2">Cancelar</a>
+            </form>
+
+            <hr class="my-4" />
+
+            <h5 class="mb-3">Locatários cadastrados</h5>
+            <div id="locatarios-list-container">
+                <partial name="_List" model="Enumerable.Empty<GestaoCondominio.Models.Locatario>()" />
+            </div>
+
+            <script>
+                $(function(){
+                    // load initial list
+                    function loadList(){
+                        $.get('@Url.Action("ListPartial","Locatarios")', function(html){
+                            $('#locatarios-list-container').html(html);
+                        });
+                    }
+                    loadList();
+
+                    $('#locatario-create-form').on('submit', function(e){
+                        e.preventDefault();
+                        var $form = $(this);
+                        var data = $form.serialize();
+                            $.ajax({
+                                url: $form.attr('action'),
+                                method: 'POST',
+                                data: data,
+                                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                                success: function(resp){
+                                    console.log('AJAX create response:', resp);
+                                    // If the server returned HTML (partial) as a string, replace the list directly
+                                    if (typeof resp === 'string') {
+                                        $('#locatarios-list-container').html(resp);
+                                        $form[0].reset();
+                                        $('#locatario-validation-summary').empty();
+                                        return;
+                                    }
+
+                                    // If a JSON payload with success flag
+                                    if(resp && resp.success){
+                                        // clear form
+                                        $form[0].reset();
+                                        $('#locatario-validation-summary').empty();
+                                        // reload list (attempt to fetch HTML partial)
+                                        loadList();
+                                        return;
+                                    }
+
+                                    // Validation errors returned as JSON
+                                    if(resp && resp.errors){
+                                        var html = '<ul>' + resp.errors.map(function(e){ return '<li>'+e+'</li>'; }).join('') + '</ul>';
+                                        $('#locatario-validation-summary').html(html);
+                                        return;
+                                    }
+
+                                    // fallback: navigate to index to show result
+                                    location.href = '@Url.Action("Index","Locatarios")';
+                                },
+                                error: function(xhr){
+                                    console.error('AJAX error:', xhr);
+                                    var msg = 'Erro ao criar locatário. '; 
+                                    try { msg += xhr.responseText; } catch(e){ }
+                                    alert(msg);
+                                }
+                            });
+                    });
+                });
+            </script>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

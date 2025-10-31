@@ -1,0 +1,104 @@
+@{
+    ViewData["Title"] = "Gestão";
+}
+
+<div class="container mt-4">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h2 class="mb-0">Gestão</h2>
+            <p class="text-muted small mb-0">Acesse os cadastros do seu condomínio</p>
+        </div>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-sm-6 col-md-4">
+            @if (User.IsInRole("Gestor"))
+            {
+                <a class="management-card d-block text-decoration-none text-dark p-3" asp-controller="Imoveis" asp-action="Create">
+                    <div class="d-flex align-items-center">
+                        <div class="icon-circle bg-purple me-3">🏠</div>
+                        <div>
+                            <h5 class="mb-1">Cadastrar Imóvel</h5>
+                            <small class="text-muted">Endereço, bloco e unidade</small>
+                        </div>
+                    </div>
+                </a>
+            }
+            else
+            {
+                <a class="management-card d-block text-decoration-none text-dark p-3" asp-controller="Imoveis" asp-action="Index">
+                    <div class="d-flex align-items-center">
+                        <div class="icon-circle bg-purple me-3">🏠</div>
+                        <div>
+                            <h5 class="mb-1">Imóveis</h5>
+                            <small class="text-muted">Visualizar imóveis cadastrados</small>
+                        </div>
+                    </div>
+                </a>
+            }
+        </div>
+
+        <div class="col-sm-6 col-md-4">
+            <a class="management-card d-block text-decoration-none text-dark p-3" asp-controller="Condominos" asp-action="Index">
+                <div class="d-flex align-items-center">
+                    <div class="icon-circle bg-purple me-3">👥</div>
+                    <div>
+                        <h5 class="mb-1">Condôminos</h5>
+                        <small class="text-muted">Ver e cadastrar condôminos</small>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-sm-6 col-md-4">
+            <a class="management-card d-block text-decoration-none text-dark p-3" asp-controller="Locatarios" asp-action="Index">
+                <div class="d-flex align-items-center">
+                    <div class="icon-circle bg-purple me-3">🔑</div>
+                    <div>
+                        <h5 class="mb-1">Locatários</h5>
+                        <small class="text-muted">Ver e cadastrar locatários</small>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-sm-6 col-md-4">
+            <a class="management-card d-block text-decoration-none text-dark p-3" asp-controller="Proprietarios" asp-action="Index">
+                <div class="d-flex align-items-center">
+                    <div class="icon-circle bg-purple me-3">📄</div>
+                    <div>
+                        <h5 class="mb-1">Proprietários</h5>
+                        <small class="text-muted">Ver e cadastrar proprietários</small>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-sm-6 col-md-4">
+            @if (User.IsInRole("Gestor"))
+            {
+                <a class="management-card d-block text-decoration-none text-dark p-3" asp-controller="Funcionarios" asp-action="Create">
+                    <div class="d-flex align-items-center">
+                        <div class="icon-circle bg-purple me-3">🛠️</div>
+                        <div>
+                            <h5 class="mb-1">Cadastrar Funcionário</h5>
+                            <small class="text-muted">Equipe e cargos</small>
+                        </div>
+                    </div>
+                </a>
+            }
+            else
+            {
+                <a class="management-card d-block text-decoration-none text-dark p-3" asp-controller="Funcionarios" asp-action="Index">
+                    <div class="d-flex align-items-center">
+                        <div class="icon-circle bg-purple me-3">🛠️</div>
+                        <div>
+                            <h5 class="mb-1">Funcionários</h5>
+                            <small class="text-muted">Visualizar equipe</small>
+                        </div>
+                    </div>
+                </a>
+            }
+        </div>
+    </div>
+</div>
